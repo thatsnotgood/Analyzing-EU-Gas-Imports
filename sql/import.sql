@@ -43,4 +43,4 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
 );
 
 -- Import .csv file contents into database via staging table:
-\copy "EUGasSC_staging" FROM 'C:\Users\reyes\code\EUGasSC.csv' WITH (FORMAT csv, HEADER true);
+\copy "EUGasSC_staging" FROM '../../../EUGasSC.csv' WITH (FORMAT csv, HEADER true);
