@@ -1,3 +1,4 @@
+-- Create type for designated European Gas Zone(s):
 CREATE TYPE "european_gas_zone" AS ENUM (
     'AT', 'BE', 'BG', 'CZ', 'DE', 'DK', 'SE', 'FI',
     'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LV',
@@ -18,7 +19,7 @@ CREATE TABLE IF NOT EXISTS "EUGasSC" (
     "TOTAL" BIGINT DEFAULT NULL, -- Total gas consumption.
     "RU" BIGINT DEFAULT NULL, -- Gas supply from Russia imports.
     "LNG" BIGINT DEFAULT NULL, -- Gas supply from LNG imports.
-    "PRO" BIGINT DEFAULT NULL, -- Gas supply from EU production.
+    "PRO" BIGINT DEFAULT NULL, -- Gas supply from European Union production.
     "AZ" INT DEFAULT NULL, -- Gas supply from Azerbaijan imports.
     "DZ" INT DEFAULT NULL, -- Gas supply from Algeria imports.
     "NO" BIGINT DEFAULT NULL, -- Gas supply from Norway imports.
@@ -29,7 +30,7 @@ CREATE TABLE IF NOT EXISTS "EUGasSC" (
     "storage_injection" BIGINT DEFAULT NULL, -- Gas supply injected into storage.
     "RU_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored Russia imports.
     "LNG_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored LNG imports.
-    "PRO_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored EU production.
+    "PRO_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored European Union production.
     "AZ_from_storage" INT DEFAULT NULL, -- Gas supply from stored Azerbaijan imports.
     "DZ_from_storage" INT DEFAULT NULL, -- Gas supply from stored Algeria imports.
     "NO_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored Norway imports.

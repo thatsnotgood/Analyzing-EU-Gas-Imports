@@ -1,3 +1,4 @@
+-- Create type for designated European Gas Zone(s):
 CREATE TYPE "european_gas_zone" AS ENUM (
     'AT', 'BE', 'BG', 'CZ', 'DE', 'DK', 'SE', 'FI',
     'FR', 'GR', 'HR', 'HU', 'IE', 'IT', 'LT', 'LV',
@@ -12,12 +13,12 @@ CREATE TYPE "european_gas_zone" AS ENUM (
 -- Create staging table for importing .csv file contents:
 -- Note: All integer values measured in kilowatt-hours (kWh).
 CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
-    "date" DATE,
+    "date" DATE NOT NULL,
     "country" "european_gas_zone" NOT NULL,
     "TOTAL" BIGINT DEFAULT NULL, -- Total gas consumption.
     "RU" BIGINT DEFAULT NULL, -- Gas supply from Russia imports.
     "LNG" BIGINT DEFAULT NULL, -- Gas supply from LNG imports.
-    "PRO" BIGINT DEFAULT NULL, -- Gas supply from EU production.
+    "PRO" BIGINT DEFAULT NULL, -- Gas supply from European Union production.
     "AZ" INT DEFAULT NULL, -- Gas supply from Azerbaijan imports.
     "DZ" INT DEFAULT NULL, -- Gas supply from Algeria imports.
     "NO" BIGINT DEFAULT NULL, -- Gas supply from Norway imports.
@@ -44,3 +45,33 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
 
 -- Import .csv file contents into database via staging table:
 \copy "EUGasSC_staging" FROM '../../../EUGasSC.csv' WITH (FORMAT csv, HEADER true);
+
+-- Create type for EU Gas-Market Participants:
+CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
+    -- EU Member States
+    'AT', 'BG', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU',
+    'IE', 'IT', 'LT', 'NL', 'PL', 'PT', 'RO', 'SI', 'SK',
+    'UK', -- United Kingdom, not an EU member-state.
+    -- EU Gas Balancing Zones:
+    'BE-LU', -- Belgium-Luxembourg Balancing Zone.
+    'DK-SE', -- Denmark-Sweden Balancing Zone.
+    'LV-EE', -- Latvia-Estonia Balancing Zone.
+    -- Foreign EU Gas-Trade Partners:
+    'AZ', 'CH', 'DZ', 'LY', 'NO', 'RS', 'RU', 'TR'
+);
+
+CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasNet_staging" (
+    "date" DATE NOT NULL,
+    "fromCountry" "eu_gas_market_stakeholder" NOT NULL,
+    "toCountry" "eu_gas_market_stakeholder" NOT NULL,
+    "LNG_share" DECIMAL(5,4) DEFAULT NULL,
+    "PRO_share" DECIMAL(5,4) DEFAULT NULL,
+    "RU_share" DECIMAL(5,4) DEFAULT NULL,
+    "AZ_share" DECIMAL(5,4) DEFAULT NULL,
+    "DZ_share" DECIMAL(5,4) DEFAULT NULL,
+    "NO_share" DECIMAL(5,4) DEFAULT NULL,
+    "RS_share" DECIMAL(5,4) DEFAULT NULL,
+    "TR_share" DECIMAL(5,4) DEFAULT NULL,
+    "LY_share" DECIMAL(5,4) DEFAULT NULL,
+    "TotalFlow" INT DEFAULT NULL,
+);
