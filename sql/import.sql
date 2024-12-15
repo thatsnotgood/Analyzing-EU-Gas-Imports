@@ -37,7 +37,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
     "TR_from_storage" INT DEFAULT NULL, -- Gas supply from stored Turkey imports.
     "house_heating" BIGINT DEFAULT NULL, -- Gas consumption in household heating.
     "public_heating" INT DEFAULT NULL, -- Gas consumption in public building heating.
-    "others" INT DEFAULT NULL, -- Gas consumption in others sector(s).
+    "others" INT DEFAULT NULL, -- Gas consumption in other sector(s).
     "industrial" BIGINT DEFAULT NULL, -- Gas consumption in industrial sector.
     "power" INT DEFAULT NULL -- Gas consumption in power generation.
 );
