@@ -16,7 +16,7 @@ Changes made:
 (2) Original data (EUGasSC.csv & EUGasNet.csv) was accessed and transformed into PostgreSQL schema in December 2024.
 (3) Attribution is placed in this file (import.sql) as it handles the direct importation from the source CSV files.
 
-Project Version: 1.0 (December 2024)
+Schema Version: 1.0 (December 2024)
 */
 
 -- Create type for designated European Gas Zone(s):
