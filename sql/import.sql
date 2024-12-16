@@ -1,3 +1,24 @@
+/* Data Attribution:
+
+This project contains information from the 'EUGasSC' and 'EUGasNet' datasets,
+made available under the Creative Commons Attribution 4.0 International License. Details below:
+
+Title: EU27 & UK gas supply-transmission-consumption structures with driving factors of consumption change
+Version: 2.0
+Authors: Zhou, C., Zhu, B., Ciais, P., Arous, S. B., Davis, S. J., & Liu, Z.
+Year: 2024
+Source: https://doi.org/10.5281/zenodo.11175364
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Changes made: 
+(1) Raw CSV data transformed into an optimized PostgreSQL database with modified column names, 
+    custom indexes and constraints, analytical views, and market analysis queries.
+(2) Original data (EUGasSC.csv & EUGasNet.csv) was accessed and transformed into PostgreSQL schema in December 2024.
+(3) Attribution is placed in this file (import.sql) as it handles the direct importation from the source CSV files.
+
+Project Version: 1.0 (December 2024)
+*/
+
 -- Create type for designated European Gas Zone(s):
 CREATE TYPE "european_gas_zone" AS ENUM (
     'AT', 'BE', 'BG', 'CZ', 'DE', 'DK', 'SE', 'FI',
