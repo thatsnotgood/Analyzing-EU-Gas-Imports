@@ -72,7 +72,7 @@ FROM "EUGasSC_staging";
 
 -- Create type for EU Gas-Market Participants:
 CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
-    -- EU Member States
+    -- EU member-states:
     'AT', 'BG', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU',
     'IE', 'IT', 'LT', 'NL', 'PL', 'PT', 'RO', 'SI', 'SK',
     'UK', -- United Kingdom, not an EU member-state.
@@ -86,7 +86,7 @@ CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
 
 -- Create finalized EUGasNet table with adjusted column names:
 -- Note: TOTAL represents gas transmission volume measured in kilowatt-hours (kWh).
--- Note: Share columns ('_share') represent supply-origin ratios of transmitted gas, where the sum of all shares for each transaction approximately equals 1.0000.
+-- Note: Share columns ('_share') represent source composition ratios of transmitted gas (i.e., proportion from each source like LNG, Russia, Norway etc.), where all shares sum to approximately 1.0000 for each transmission.
 CREATE TABLE IF NOT EXISTS "EUGasNet" (
     "id" SERIAL,
     "date" DATE NOT NULL,
@@ -115,10 +115,10 @@ INSERT INTO "EUGasNet" (
 )
 SELECT
     "date",
-    "fromCountry" AS "export_country_code", 
-    "toCountry" AS "import_country_code",
+    "fromCountry" AS "export_country_code", -- Rename to clarify: Export country's code.
+    "toCountry" AS "import_country_code", -- Rename to clarify: Import country's code.
     "LNG_share", "PRO_share", "RU_share",
     "AZ_share", "DZ_share", "NO_share",
     "RS_share", "TR_share", "LY_share",
-    "TotalFlow" AS "TOTAL"
+    "TotalFlow" AS "TOTAL" -- Rename to clarify: Following consistent naming convention for totals. Total gas transmission.
 FROM "EUGasNet_staging";

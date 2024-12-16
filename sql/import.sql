@@ -48,7 +48,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
 
 -- Create type for EU Gas-Market Participants:
 CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
-    -- EU Member States
+    -- EU member-states:
     'AT', 'BG', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU',
     'IE', 'IT', 'LT', 'NL', 'PL', 'PT', 'RO', 'SI', 'SK',
     'UK', -- United Kingdom, not an EU member-state.
@@ -62,7 +62,7 @@ CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
 
 -- Create second staging table schema for importing EUGasNet.csv file contents:
 -- Note: TOTAL represents gas transmission volume measured in kilowatt-hours (kWh).
--- Note: Share columns ('_share') represent supply-origin ratios of transmitted gas, where the sum of all shares for each transaction approximately equals 1.0000.
+-- Note: Share columns ('_share') represent source composition ratios of transmitted gas (i.e., proportion from each source like LNG, Russia, Norway etc.), where all shares sum to approximately 1.0000 for each transmission.
 CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasNet_staging" (
     "date" DATE NOT NULL,
     "fromCountry" "eu_gas_market_stakeholder" NOT NULL, -- Exporting country code.
