@@ -10,7 +10,7 @@ CREATE TYPE "european_gas_zone" AS ENUM (
     -- Noteworthy Countries omitted: Cyprus (geo-location), Luxembourg and Malta (small market size).
 ); 
 
--- Create finalized table with adjusted column names:
+-- Create finalized EUGasSC table with adjusted column names:
 -- Note: All integer values measured in kilowatt-hours (kWh).
 CREATE TABLE IF NOT EXISTS "EUGasSC" (
     "id" SERIAL,
@@ -69,3 +69,56 @@ SELECT
     "RS_from_storage", "LY_from_storage", "TR_from_storage",
     "house_heating", "public_heating", "others", "industrial", "power"
 FROM "EUGasSC_staging";
+
+-- Create type for EU Gas-Market Participants:
+CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
+    -- EU Member States
+    'AT', 'BG', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GR', 'HR', 'HU',
+    'IE', 'IT', 'LT', 'NL', 'PL', 'PT', 'RO', 'SI', 'SK',
+    'UK', -- United Kingdom, not an EU member-state.
+    -- EU Gas Balancing Zones:
+    'BE-LU', -- Belgium-Luxembourg Balancing Zone.
+    'DK-SE', -- Denmark-Sweden Balancing Zone.
+    'LV-EE', -- Latvia-Estonia Balancing Zone.
+    -- Foreign EU Gas-Trade Partners:
+    'AZ', 'CH', 'DZ', 'LY', 'NO', 'RS', 'RU', 'TR'
+);
+
+-- Create finalized EUGasNet table with adjusted column names:
+-- Note: TOTAL represents gas transmission volume measured in kilowatt-hours (kWh).
+-- Note: Share columns ('_share') represent supply-origin ratios of transmitted gas, where the sum of all shares for each transaction approximately equals 1.0000.
+CREATE TABLE IF NOT EXISTS "EUGasNet" (
+    "id" SERIAL,
+    "date" DATE NOT NULL,
+    "export_country_code" "eu_gas_market_stakeholder" NOT NULL, -- Exporting country code.
+    "import_country_code" "eu_gas_market_stakeholder" NOT NULL, -- Importing country code.
+    "LNG_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from LNG.
+    "PRO_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from European Union production.
+    "RU_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Russia production.
+    "AZ_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Azerbaijan production.
+    "DZ_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Algeria production.
+    "NO_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Norway production.
+    "RS_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Serbia production.
+    "TR_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Turkey production.
+    "LY_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Libya production.
+    "TOTAL" NUMERIC(15,4) DEFAULT NULL -- Total transmission amount (kWh).
+);
+
+-- Insert data from staging table to final table "EUGasNet":
+INSERT INTO "EUGasNet" (
+    "date",
+    "export_country_code", "import_country_code",
+    "LNG_share", "PRO_share", "RU_share",
+    "AZ_share", "DZ_share", "NO_share",
+    "RS_share", "TR_share", "LY_share",
+    "TOTAL"
+)
+SELECT
+    "date",
+    "fromCountry" AS "export_country_code", 
+    "toCountry" AS "import_country_code",
+    "LNG_share", "PRO_share", "RU_share",
+    "AZ_share", "DZ_share", "NO_share",
+    "RS_share", "TR_share", "LY_share",
+    "TotalFlow" AS "TOTAL"
+FROM "EUGasNet_staging";

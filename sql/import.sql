@@ -10,7 +10,7 @@ CREATE TYPE "european_gas_zone" AS ENUM (
     -- Noteworthy Countries omitted: Cyprus (geo-location), Luxembourg and Malta (small market size).
 ); 
 
--- Create staging table for importing .csv file contents:
+-- Create staging table schema for importing EUGasSC.csv file contents:
 -- Note: All integer values measured in kilowatt-hours (kWh).
 CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
     "date" DATE NOT NULL,
@@ -43,7 +43,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
     "power" INT DEFAULT NULL -- Gas consumption in power generation.
 );
 
--- Import .csv file contents into database via staging table:
+-- Import EUGasSC.csv file contents into database via staging table:
 \copy "EUGasSC_staging" FROM '../../../EUGasSC.csv' WITH (FORMAT csv, HEADER true);
 
 -- Create type for EU Gas-Market Participants:
@@ -60,18 +60,24 @@ CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
     'AZ', 'CH', 'DZ', 'LY', 'NO', 'RS', 'RU', 'TR'
 );
 
+-- Create second staging table schema for importing EUGasNet.csv file contents:
+-- Note: TOTAL represents gas transmission volume measured in kilowatt-hours (kWh).
+-- Note: Share columns ('_share') represent supply-origin ratios of transmitted gas, where the sum of all shares for each transaction approximately equals 1.0000.
 CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasNet_staging" (
     "date" DATE NOT NULL,
-    "fromCountry" "eu_gas_market_stakeholder" NOT NULL,
-    "toCountry" "eu_gas_market_stakeholder" NOT NULL,
-    "LNG_share" DECIMAL(5,4) DEFAULT NULL,
-    "PRO_share" DECIMAL(5,4) DEFAULT NULL,
-    "RU_share" DECIMAL(5,4) DEFAULT NULL,
-    "AZ_share" DECIMAL(5,4) DEFAULT NULL,
-    "DZ_share" DECIMAL(5,4) DEFAULT NULL,
-    "NO_share" DECIMAL(5,4) DEFAULT NULL,
-    "RS_share" DECIMAL(5,4) DEFAULT NULL,
-    "TR_share" DECIMAL(5,4) DEFAULT NULL,
-    "LY_share" DECIMAL(5,4) DEFAULT NULL,
-    "TotalFlow" INT DEFAULT NULL,
+    "fromCountry" "eu_gas_market_stakeholder" NOT NULL, -- Exporting country code.
+    "toCountry" "eu_gas_market_stakeholder" NOT NULL, -- Importing country code.
+    "LNG_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from LNG.
+    "PRO_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from European Union production.
+    "RU_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Russia production.
+    "AZ_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Azerbaijan production.
+    "DZ_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Algeria production.
+    "NO_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Norway production.
+    "RS_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Serbia production.
+    "TR_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Turkey production.
+    "LY_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Libya production.
+    "TotalFlow" NUMERIC(15,4) DEFAULT NULL -- Total transmission amount (kWh).
 );
+
+-- Import EUGasNet.csv file contents into database via staging table:
+\copy "EUGasNet_staging" FROM '../../../EUGasNet.csv' WITH (FORMAT csv, HEADER true);
