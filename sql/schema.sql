@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "EUGasSC" (
     "others" INT DEFAULT NULL, -- Gas consumption in other sector(s).
     "industrial" BIGINT DEFAULT NULL, -- Gas consumption in industrial sector.
     "power" INT DEFAULT NULL, -- Gas consumption in power generation.
-    PRIMARY KEY ("id")
+    PRIMARY KEY("id")
 );
 
 -- Insert data from staging table to final table "EUGasSC":
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS "EUGasNet" (
     "TR_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Turkey production.
     "LY_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Libya production.
     "TOTAL" NUMERIC(15,4) DEFAULT NULL, -- Total transmission amount (kWh).
-    PRIMARY KEY ("id")
+    PRIMARY KEY("id")
 );
 
 -- Insert data from staging table to final table "EUGasNet":
