@@ -141,3 +141,26 @@ CREATE INDEX "ix_net_ru_share" ON "EUGasNet" ("RU_share");
 -- (2) Composite EUGasNet index:
 CREATE INDEX "ix_net_date_ru_share" ON "EUGasNet" ("date", "RU_share");
 CREATE INDEX "ix_net_ru_composite" ON "EUGasNet" ("export_country_code", "import_country_code", "RU_share", "date");
+
+-- Create materialized view for isolating documented gas transmission routes:
+/* Purpose: 
+(1) Excludes routes where ALL transmissions have RU_share = 0.1111 (1/9).
+(2) This view improves query performance by pre-computing routes with distinct supply-shares.
+
+Rationale: 
+When the supply-source is unknown, the dataset assigns equal shares (1/9) to all '_share' columns. 
+These routes represent statistically uniform distributions (1/9 share) suggesting unknown origin, and are thus filtered out to focus on documented transmission patterns with distinct supply-shares.
+*/
+CREATE MATERIALIZED VIEW "documented_routes" AS
+SELECT *
+FROM "EUGasNet"
+WHERE ("export_country_code", "import_country_code") IN (
+    SELECT 
+        "export_country_code",
+        "import_country_code"
+    FROM "EUGasNet"
+    GROUP BY "export_country_code", "import_country_code"
+    HAVING COUNT(*) > COUNT(*) FILTER (WHERE "RU_share" = 0.1111)
+);
+-- Note: View should be refreshed monthly when new data is made available:
+-- REFRESH MATERIALIZED VIEW "documented_routes";
