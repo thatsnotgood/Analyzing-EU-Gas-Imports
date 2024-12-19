@@ -123,3 +123,21 @@ SELECT
     "RS_share", "TR_share", "LY_share",
     "TotalFlow" AS "TOTAL" -- Rename to clarify: Following consistent naming convention for totals. Total gas transmission.
 FROM "EUGasNet_staging";
+
+-- Create indexes for query optimization:
+
+-- (1) Single-column indexes:
+
+-- EUGasSC indexes:
+CREATE INDEX "ix_sc_country_code" ON "EUGasSC" ("country_code");
+CREATE INDEX "ix_sc_date" ON "EUGasSC" ("date");
+
+-- EUGasNet indexes:
+CREATE INDEX "ix_net_date" ON "EUGasNet" ("date");
+CREATE INDEX "ix_net_exporter" ON "EUGasNet" ("export_country_code");
+CREATE INDEX "ix_net_importer" ON "EUGasNet" ("import_country_code");
+CREATE INDEX "ix_net_ru_share" ON "EUGasNet" ("RU_share");
+
+-- (2) Composite EUGasNet index:
+CREATE INDEX "ix_net_date_ru_share" ON "EUGasNet" ("date", "RU_share");
+CREATE INDEX "ix_net_ru_composite" ON "EUGasNet" ("export_country_code", "import_country_code", "RU_share", "date");
