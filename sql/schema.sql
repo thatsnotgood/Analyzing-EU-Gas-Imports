@@ -144,14 +144,15 @@ CREATE INDEX "ix_net_ru_composite" ON "EUGasNet" ("export_country_code", "import
 
 -- Create materialized view for isolating documented gas transmission routes:
 /* Purpose:
-(1) Excludes routes wherein all recorded transmissions have RU_share = 0.1111 (1/9).
+(1) Excludes routes wherein all recorded transmissions have an RU_share supply ratio = 0.1111 (1/9).
 (2) This view improves query performance by pre-computing routes with distinct supply-shares.
 
 Rationale:
 A route represents a unique export-import country pair (e.g., DK-SE to DE).
 Each route contains multiple transmission records (rows), with each record documenting a gas flow event.
 When the supply-source is unknown, the dataset assigns equal shares (1/9) to all '_share' columns.
-These routes represent statistically uniform distributions (1/9 share) suggesting unknown origin, and are thus filtered out to focus on documented transmission patterns with distinct supply-shares.
+These routes show uniform distributions (1/9 share across all supply origins), indicating the true production supply ratio is unknown.
+The view excludes these routes to focus on transmission patterns with distinct, documented supply-shares.
 */
 CREATE MATERIALIZED VIEW "documented_routes" AS
 SELECT *
