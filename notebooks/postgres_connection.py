@@ -9,7 +9,7 @@ pd.set_option('display.max_rows', 50)
 pd.set_option('display.min_rows', 10)
 pd.set_option('display.expand_frame_repr', True)
 
-# Get the path to the .env file:
+# Get the path of the .env file:
 dotenv_path = Path(__file__).parent.parent / '.env'
 load_dotenv(dotenv_path = dotenv_path)
 
