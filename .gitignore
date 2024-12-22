@@ -1,2 +1,6 @@
 # Environment Variables:
 .env
+
+# Python bytecode files and cache:
+__pycache__/
+*.pyc
