@@ -124,6 +124,25 @@ SELECT
     "TotalFlow" AS "TOTAL" -- Rename to clarify: Following consistent naming convention for totals. Total gas transmission.
 FROM "EUGasNet_staging";
 
+-- Create check constraints via alter table statements for data integrity:
+
+-- EUGasNet check constraints:
+
+-- Add check constraint to verify sum of '_share' columns approximately equals 1.0000 (±0.0005):
+ALTER TABLE "EUGasNet"
+ADD CONSTRAINT "check_net_shares_sum" CHECK (
+    (COALESCE("LNG_share", 0) + 
+     COALESCE("PRO_share", 0) + 
+     COALESCE("RU_share", 0) +
+     COALESCE("AZ_share", 0) + 
+     COALESCE("DZ_share", 0) + 
+     COALESCE("NO_share", 0) +
+     COALESCE("RS_share", 0) + 
+     COALESCE("TR_share", 0) + 
+     COALESCE("LY_share", 0))::NUMERIC(5,4)
+    BETWEEN 0.9995 AND 1.0005
+);
+
 -- Create indexes for query optimization:
 
 -- (1) Single-column indexes:
