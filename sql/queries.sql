@@ -19,19 +19,19 @@ SELECT
     ROUND(AVG("LNG_share"), 4) AS "avg_LNG_dependency",
     ROUND(AVG("PRO_share"), 4) AS "avg_PRO_dependency",
     ROUND(AVG("NO_share"), 4) AS "avg_NO_dependency"
-FROM "documented_routes"
-WHERE "TOTAL" > 0
-AND "date" < '2022-02-24'   -- Pre-invasion period.
-GROUP BY "import_country_code"
-ORDER BY "avg_HHI" DESC;
+    FROM "documented_routes"
+    WHERE "TOTAL" > 0
+    AND "date" < '2022-02-24'    -- Pre-invasion period.
+    GROUP BY "import_country_code"
+    ORDER BY "avg_HHI" DESC;
 
 -- Analysis of countries highly dependent on Russian gas:
 WITH "RU_dependent_countries" AS (
     SELECT "import_country_code"
-    FROM "documented_routes"
-    WHERE "date" < '2022-02-24'
-    GROUP BY "import_country_code"
-    HAVING AVG("RU_share") >= 0.3500
+        FROM "documented_routes"
+        WHERE "date" < '2022-02-24'
+        GROUP BY "import_country_code"
+        HAVING AVG("RU_share") >= 0.3500
 )
 SELECT 
     sc."country_code",
@@ -41,21 +41,21 @@ SELECT
     ROUND(AVG(sc."storage_injection"), 2) AS "avg_injection",
     ROUND(AVG(sc."house_heating"), 2) AS "avg_heating_usage",
     ROUND(AVG(sc."industrial"), 2) AS "avg_industrial_usage"
-FROM "RU_dependent_countries" AS rdc
-JOIN "EUGasSC" AS sc ON rdc."import_country_code"::TEXT = sc."country_code"::TEXT
-JOIN "EUGasNet" AS net ON sc."country_code"::TEXT = net."import_country_code"::TEXT 
-    AND sc."date" = net."date"
-WHERE net."date" < '2022-02-24'
-GROUP BY sc."country_code"
-ORDER BY "RU_share" DESC;
+    FROM "RU_dependent_countries" AS rdc
+    JOIN "EUGasSC" AS sc ON rdc."import_country_code"::TEXT = sc."country_code"::TEXT
+    JOIN "EUGasNet" AS net ON sc."country_code"::TEXT = net."import_country_code"::TEXT 
+        AND sc."date" = net."date"
+    WHERE net."date" < '2022-02-24'
+    GROUP BY sc."country_code"
+    ORDER BY "RU_share" DESC;
 
 -- Analysis of countries not highly dependent on Russian gas:
 WITH "RU_non_dependent_countries" AS (
     SELECT "import_country_code"
-    FROM "documented_routes"
-    WHERE "date" < '2022-02-24'
-    GROUP BY "import_country_code"
-    HAVING AVG("RU_share") < 0.3500
+        FROM "documented_routes"
+        WHERE "date" < '2022-02-24'
+        GROUP BY "import_country_code"
+        HAVING AVG("RU_share") < 0.3500
 )
 SELECT 
     sc."country_code",
@@ -65,13 +65,13 @@ SELECT
     ROUND(AVG(sc."storage_injection"), 2) AS "avg_injection",
     ROUND(AVG(sc."house_heating"), 2) AS "avg_heating_usage",
     ROUND(AVG(sc."industrial"), 2) AS "avg_industrial_usage"
-FROM "RU_non_dependent_countries" AS rndc
-JOIN "EUGasSC" AS sc ON rndc."import_country_code"::TEXT = sc."country_code"::TEXT
-JOIN "EUGasNet" AS net ON sc."country_code"::TEXT = net."import_country_code"::TEXT
-    AND sc."date" = net."date"
-WHERE net."date" < '2022-02-24'
-GROUP BY sc."country_code"
-ORDER BY "RU_share" DESC;
+    FROM "RU_non_dependent_countries" AS rndc
+    JOIN "EUGasSC" AS sc ON rndc."import_country_code"::TEXT = sc."country_code"::TEXT
+    JOIN "EUGasNet" AS net ON sc."country_code"::TEXT = net."import_country_code"::TEXT
+        AND sc."date" = net."date"
+    WHERE net."date" < '2022-02-24'
+    GROUP BY sc."country_code"
+    ORDER BY "RU_share" DESC;
 
 /*
 ----------------------------------------
@@ -92,17 +92,17 @@ SELECT
     STDDEV("RU_share")::NUMERIC(5,4) AS "std_dev",
     VARIANCE("RU_share")::NUMERIC(5,4) AS "variance",
     COUNT(*) AS "n_samples"
-FROM "documented_routes"
-WHERE "date" < '2022-02-24'
-AND "RU_share" >= 0;
+    FROM "documented_routes"
+    WHERE "date" < '2022-02-24'
+        AND "RU_share" >= 0;
 
 -- Analysis of RU_share distribution pre-invasion with standard deviation intervals:
 WITH "stats" AS (
     SELECT
         AVG("RU_share") AS "mean",
         STDDEV("RU_share") AS "std_dev"
-    FROM "documented_routes"
-    WHERE "date" < '2022-02-24'
+        FROM "documented_routes"
+        WHERE "date" < '2022-02-24'
 )
 SELECT
     ("mean" - 2 * "std_dev")::NUMERIC(5,4) AS "RU_share_low_2sd",
@@ -112,7 +112,7 @@ SELECT
     ("mean" + 2 * "std_dev")::NUMERIC(5,4) AS "RU_share_high_2sd",
     "std_dev"::NUMERIC(5,4) AS "RU_share_sigma",
     (SELECT COUNT(*) FROM "documented_routes" WHERE "date" >= '2022-02-24') AS "n_samples"
-FROM "stats";
+    FROM "stats";
 
 -- Analysis of RU_share distribution post-invasion with statistical measures:
 SELECT
@@ -127,17 +127,17 @@ SELECT
     STDDEV("RU_share")::NUMERIC(5,4) AS "std_dev",
     VARIANCE("RU_share")::NUMERIC(5,4) AS "variance",
     COUNT(*) AS "n_samples"
-FROM "documented_routes"
-WHERE "date" >= '2022-02-24'
-AND "RU_share" >= 0;
+    FROM "documented_routes"
+    WHERE "date" >= '2022-02-24'
+        AND "RU_share" >= 0;
 
 -- Analysis of RU_share distribution post-invasion with standard deviation intervals:
 WITH "stats" AS (
     SELECT
         AVG("RU_share") AS "mean",
         STDDEV("RU_share") AS "std_dev"
-    FROM "documented_routes"
-    WHERE "date" >= '2022-02-24'
+        FROM "documented_routes"
+        WHERE "date" >= '2022-02-24'
 )
 SELECT
     ("mean" - 2 * "std_dev")::NUMERIC(5,4) AS "RU_share_low_2sd",
@@ -147,7 +147,7 @@ SELECT
     ("mean" + 2 * "std_dev")::NUMERIC(5,4) AS "RU_share_high_2sd",
     "std_dev"::NUMERIC(5,4) AS "RU_share_sigma",
     (SELECT COUNT(*) FROM "documented_routes" WHERE "date" >= '2022-02-24') AS "n_samples"
-FROM "stats";
+    FROM "stats";
 
 -- T-test to compare pre and post invasion means:
 WITH "pre_invasion" AS (
@@ -156,8 +156,8 @@ WITH "pre_invasion" AS (
         STDDEV("RU_share") AS "std_dev",
         VARIANCE("RU_share") AS "var",
         COUNT(*) AS "n_samples"
-    FROM "documented_routes"
-    WHERE "date" < '2022-02-24'
+        FROM "documented_routes"
+        WHERE "date" < '2022-02-24'
 ),
 "post_invasion" AS (
     SELECT
@@ -165,8 +165,8 @@ WITH "pre_invasion" AS (
         STDDEV("RU_share") AS "std_dev",
         VARIANCE("RU_share") AS "var",
         COUNT(*) AS "n_samples"
-    FROM "documented_routes"
-    WHERE "date" >= '2022-02-24'
+        FROM "documented_routes"
+        WHERE "date" >= '2022-02-24'
 )
 SELECT
     pre."mean"::NUMERIC(5,4) AS "pre_mean",
@@ -175,7 +175,9 @@ SELECT
     post."n_samples" AS "post_samples",
     (pre."mean" - post."mean") /
     SQRT(NULLIF((pre."var" / pre."n_samples") + (post."var" / post."n_samples"), 0)) AS "t_statistic"
-FROM "pre_invasion" AS pre, "post_invasion" AS post;
+    FROM
+        "pre_invasion" AS pre,
+        "post_invasion" AS post;
 
 /*
 ----------------------------------------
@@ -188,17 +190,17 @@ Relationship Analysis:
 SELECT DISTINCT
     "export_country_code",
     "import_country_code"
-FROM "documented_routes"
-WHERE "date" < '2022-02-24'
-    AND "RU_share" > 0.4100    -- mean RU share pre-invasion
+    FROM "documented_routes"
+    WHERE "date" < '2022-02-24'
+        AND "RU_share" >= 0.4100    -- mean RU share pre-invasion
 EXCEPT
 SELECT DISTINCT
     "export_country_code",
     "import_country_code"
-FROM "documented_routes"
-WHERE "date" >= '2022-02-24'
-    AND "RU_share" > 0.1500    -- mean RU share post-invasion
-ORDER BY "export_country_code", "import_country_code";
+    FROM "documented_routes"
+    WHERE "date" >= '2022-02-24'
+        AND "RU_share" BETWEEN 0.1500 AND 0.4099    -- mean RU share post-invasion range
+    ORDER BY "export_country_code", "import_country_code";
 
 -- Analyze how relationships transformed rather than ended:
 /* Analysis focused on relationships that shifted from mean RU share pre-invasion
@@ -214,20 +216,20 @@ SELECT
     AVG(CASE WHEN "date" >= '2022-02-24' THEN "RU_share" END)::NUMERIC(5,4) AS "post_invasion_RU_share",
     COUNT(CASE WHEN "date" < '2022-02-24' THEN 1 END) AS "pre_invasion_trades",
     COUNT(CASE WHEN "date" >= '2022-02-24' THEN 1 END) AS "post_invasion_trades"
-FROM "documented_routes"
-WHERE ("export_country_code", "import_country_code") IN (
-    SELECT "export_country_code", "import_country_code"
     FROM "documented_routes"
-    WHERE "date" < '2022-02-24'
-        AND "RU_share" > 0.4100    -- mean RU share pre-invasion
-    EXCEPT
-    SELECT "export_country_code", "import_country_code"
-    FROM "documented_routes"
-    WHERE "date" >= '2022-02-24'
-        AND "RU_share" > 0.1500    -- mean RU share post-invasion
-)
-GROUP BY "export_country_code", "import_country_code"
-ORDER BY "export_country_code", "import_country_code";
+    WHERE ("export_country_code", "import_country_code") IN (
+        SELECT "export_country_code", "import_country_code"
+            FROM "documented_routes"
+            WHERE "date" < '2022-02-24'
+                AND "RU_share" >= 0.4100    -- mean RU share pre-invasion
+        EXCEPT
+        SELECT "export_country_code", "import_country_code"
+            FROM "documented_routes"
+            WHERE "date" >= '2022-02-24'
+                AND "RU_share" BETWEEN 0.1500 AND 0.4099    -- mean RU share post-invasion range
+            )
+            GROUP BY "export_country_code", "import_country_code"
+            ORDER BY "export_country_code", "import_country_code";
 
 -- Analysis of trading relationship changes:
 SELECT
@@ -238,14 +240,14 @@ SELECT
     COUNT(DISTINCT CONCAT("export_country_code", "import_country_code")) AS "unique_relationships",
     COUNT(*) AS "total_transmissions",
     COUNT(*)/COUNT(DISTINCT CONCAT("export_country_code", "import_country_code"))::NUMERIC AS "avg_transmissions_per_relationship"
-FROM "documented_routes"
-WHERE "RU_share" > 0.1500
-GROUP BY
-    CASE
-        WHEN "date" < '2022-02-24' THEN 'Pre-invasion'
-        ELSE 'Post-invasion'
-    END
-ORDER BY "period" DESC;
+    FROM "documented_routes"
+    WHERE "RU_share" > 0.1500
+    GROUP BY
+        CASE
+            WHEN "date" < '2022-02-24' THEN 'Pre-invasion'
+            ELSE 'Post-invasion'
+        END
+    ORDER BY "period" DESC;
 
 -- Analyze DK-SE to DE gas composition pre and post invasion:
 SELECT
@@ -259,15 +261,15 @@ SELECT
     AVG("PRO_share")::NUMERIC(5,4) AS "avg_PRO_share",
     AVG("NO_share")::NUMERIC(5,4) AS "avg_NO_share",
     COUNT(*) AS "n_transmissions"
-FROM "documented_routes"
-WHERE "export_country_code" = 'DK-SE'
-AND "import_country_code" = 'DE'
-GROUP BY
-    CASE
-        WHEN "date" < '2022-02-24' THEN 'Pre-invasion'
-        ELSE 'Post-invasion'
-    END
-ORDER BY "period" DESC;
+    FROM "documented_routes"
+    WHERE "export_country_code" = 'DK-SE'
+        AND "import_country_code" = 'DE'
+    GROUP BY
+        CASE
+            WHEN "date" < '2022-02-24' THEN 'Pre-invasion'
+            ELSE 'Post-invasion'
+        END
+    ORDER BY "period" DESC;
 
 -- Analyze Bulgaria's export relationships pre and post invasion:
 SELECT
@@ -281,16 +283,16 @@ SELECT
     AVG("PRO_share")::NUMERIC(5,4) AS "avg_PRO_share",
     AVG("NO_share")::NUMERIC(5,4) AS "avg_NO_share",
     COUNT(*) AS "n_transmissions"
-FROM "documented_routes"
-WHERE "export_country_code" = 'BG'
-AND "import_country_code" IN ('GR', 'RO')
-GROUP BY
-    CASE
-        WHEN "date" < '2022-02-24' THEN 'Pre-invasion'
-        ELSE 'Post-invasion'
-    END,
-    "import_country_code"
-ORDER BY "route", "period" DESC;
+    FROM "documented_routes"
+    WHERE "export_country_code" = 'BG'
+        AND "import_country_code" IN ('GR', 'RO')
+    GROUP BY
+        CASE
+            WHEN "date" < '2022-02-24' THEN 'Pre-invasion'
+            ELSE 'Post-invasion'
+        END,
+        "import_country_code"
+    ORDER BY "route", "period" DESC;
 
 /*
 ----------------------------------------
@@ -304,6 +306,6 @@ SELECT
     "export_country_code", "import_country_code",
     COUNT(*) AS "total_transmissions",
     COUNT(*) FILTER (WHERE "RU_share" = 0.1111) AS "uniform_transmissions"
-FROM "EUGasNet"
-GROUP BY "export_country_code", "import_country_code"
-ORDER BY "uniform_transmissions" DESC;
+    FROM "EUGasNet"
+    GROUP BY "export_country_code", "import_country_code"
+    ORDER BY "uniform_transmissions" DESC;
