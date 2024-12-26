@@ -228,8 +228,8 @@ SELECT
             WHERE "date" >= '2022-02-24'
                 AND "RU_share" BETWEEN 0.1500 AND 0.4099    -- mean RU share post-invasion range
             )
-            GROUP BY "export_country_code", "import_country_code"
-            ORDER BY "export_country_code", "import_country_code";
+    GROUP BY "export_country_code", "import_country_code"
+    ORDER BY "export_country_code", "import_country_code";
 
 -- Analysis of trading relationship changes:
 SELECT
