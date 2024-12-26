@@ -126,22 +126,106 @@ FROM "EUGasNet_staging";
 
 -- Create check constraints via alter table statements for data integrity:
 
+-- EUGasSC check constraints:
+
+-- Add check constraints to disallow negative values in EUGasSC:
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "check_sc_positive_total" CHECK (
+    COALESCE("TOTAL", 0) >= 0
+);
+
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "check_sc_positive_supply" CHECK (
+    COALESCE("RU", 0) >= 0 AND
+    COALESCE("LNG", 0) >= 0 AND
+    COALESCE("PRO", 0) >= 0 AND
+    COALESCE("AZ", 0) >= 0 AND
+    COALESCE("DZ", 0) >= 0 AND
+    COALESCE("NO", 0) >= 0 AND
+    COALESCE("RS", 0) >= 0 AND
+    COALESCE("LY", 0) >= 0 AND
+    COALESCE("TR", 0) >= 0
+);
+
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "check_sc_positive_storage" CHECK (
+    COALESCE("storage_withdrawal", 0) >= 0 AND
+    COALESCE("storage_injection", 0) >= 0 AND
+    COALESCE("RU_from_storage", 0) >= 0 AND
+    COALESCE("LNG_from_storage", 0) >= 0 AND
+    COALESCE("PRO_from_storage", 0) >= 0 AND
+    COALESCE("AZ_from_storage", 0) >= 0 AND
+    COALESCE("DZ_from_storage", 0) >= 0 AND
+    COALESCE("NO_from_storage", 0) >= 0 AND
+    COALESCE("RS_from_storage", 0) >= 0 AND
+    COALESCE("LY_from_storage", 0) >= 0 AND
+    COALESCE("TR_from_storage", 0) >= 0
+);
+
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "check_sc_positive_consumption" CHECK (
+    COALESCE("house_heating", 0) >= 0 AND
+    COALESCE("public_heating", 0) >= 0 AND
+    COALESCE("others", 0) >= 0 AND
+    COALESCE("industrial", 0) >= 0 AND
+    COALESCE("power", 0) >= 0
+);
+
+-- Add check for valid date range:
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "check_sc_valid_date" CHECK (
+    "date" >= '2016-01-01'
+);
+
+-- Add check to verify total consumption matches TOTAL (±5%):
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "check_sc_consumption_total_balance" CHECK (
+    (COALESCE("house_heating", 0) +
+     COALESCE("public_heating", 0) +
+     COALESCE("others", 0) +
+     COALESCE("industrial", 0) +
+     COALESCE("power", 0))::NUMERIC
+    BETWEEN COALESCE("TOTAL", 0)::NUMERIC * 0.95 AND COALESCE("TOTAL", 0)::NUMERIC * 1.05
+);
+
+-- Add unique constraint to disallow duplicate supply/consumption records:
+ALTER TABLE "EUGasSC"
+ADD CONSTRAINT "unique_sc_supply_consumption_records"
+UNIQUE ("date", "country_code");
+
 -- EUGasNet check constraints:
+
+-- Add check to disallow negative values in EUGasNet TOTAL column:
+ALTER TABLE "EUGasNet"
+ADD CONSTRAINT "check_net_positive_total" CHECK (
+    COALESCE("TOTAL", 0) >= 0
+);
+
+-- Add check for valid date range:
+ALTER TABLE "EUGasNet"
+ADD CONSTRAINT "check_net_valid_date" CHECK (
+    "date" >= '2016-01-01'
+);
 
 -- Add check constraint to verify sum of '_share' columns approximately equals 1.0000 (±0.0005):
 ALTER TABLE "EUGasNet"
 ADD CONSTRAINT "check_net_shares_sum" CHECK (
-    (COALESCE("LNG_share", 0) + 
-     COALESCE("PRO_share", 0) + 
+    (COALESCE("LNG_share", 0) +
+     COALESCE("PRO_share", 0) +
      COALESCE("RU_share", 0) +
-     COALESCE("AZ_share", 0) + 
-     COALESCE("DZ_share", 0) + 
+     COALESCE("AZ_share", 0) +
+     COALESCE("DZ_share", 0) +
      COALESCE("NO_share", 0) +
-     COALESCE("RS_share", 0) + 
-     COALESCE("TR_share", 0) + 
+     COALESCE("RS_share", 0) +
+     COALESCE("TR_share", 0) +
      COALESCE("LY_share", 0))::NUMERIC(5,4)
     BETWEEN 0.9995 AND 1.0005
 );
+
+-- Add unique constraint to disallow duplicate gas transmission records:
+ALTER TABLE "EUGasNet"
+ADD CONSTRAINT "unique_net_transmission_records"
+UNIQUE ("date", "export_country_code", "import_country_code");
 
 -- Create indexes for query optimization:
 
