@@ -93,7 +93,7 @@ Check out the full analysis in the [Transmission Routes Notebook][Routes_noteboo
 [PostgreSQL_url]: https://www.postgresql.org/
 [Python]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=flat
 [Python_url]: https://www.python.org/
-[Psycopg3]: https://img.shields.io/badge/Psycopg3-3.2.3-blue.svg
+[Psycopg3]: https://img.shields.io/badge/Psycopg3-3.2.3-4169E1.svg
 [Psycopg3_url]: https://www.psycopg.org/psycopg3/
 
 [CCBY4.0License]: https://img.shields.io/badge/License-CC%20BY%204.0-yellow.svg
