@@ -10,6 +10,11 @@
   
 [![PostgreSQL][PostgreSQL]][PostgreSQL_url]
 [![Python][Python]][Python_url]
+
+</div>
+
+<div align="center">
+
 [![MIT License][MITLicense]][MITLicense_url]
 [![CC BY 4.0][CCBY4.0License]][CCBY4.0License_url]
 
