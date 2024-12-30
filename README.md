@@ -65,13 +65,13 @@
 
 ---
 
-**Market Analysis**
+**Market Analysis:**
 
 Check out the full analysis in the [Market Analysis Notebook][Market_notebook].
 
 ---
 
-**Transmission Route Analysis**
+**Transmission Route Analysis:**
 
 Check out the full analysis in the [Transmission Routes Notebook][Routes_notebook].
 
@@ -84,6 +84,31 @@ Check out the full analysis in the [Transmission Routes Notebook][Routes_noteboo
 ## Project Structure
 
 ## License
+
+**This project is under dual licensing:**
+
+**Code and Analysis:**
+
+The database schema, SQL queries, Python script, Jupyter Notebooks, and all other original work in this repository are released under the [MIT License][MITLicense_url].
+
+**Dataset Attribution:**
+
+This project employs data from the EUGasSC and EUGasNet datasets, which are released under the Creative Commons Attribution 4.0 International [(CC BY 4.0) license][CCBY4.0License_url]. Details below:
+
+- Title: EU27 & UK gas supply-transmission-consumption structures with driving factors of consumption change
+- Version: 2.0
+- Authors: Zhou, C., Zhu, B., Ciais, P., Arous, S. B., Davis, S. J., & Liu, Z.
+- Year: 2024
+- DOI: https://doi.org/10.5281/zenodo.11175364
+
+This project contains transformed data from the EUGasSC and EUGasNet datasets, accessed and processed in December 2024. The original data has been modified through:
+
+- Integration into a PostgreSQL database schema.
+- Implementation of custom indexes and constraints for optimization.
+- Creation of analytical views.
+- Development of market and transmission route queries.
+
+Any use of this project must maintain both licenses appropriately: [MIT License][MITLicense_url] for code and the [CC BY 4.0 license][CCBY4.0License_url] for the original dataset. Attribution for the original dataset must be clearly visible and accessible.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

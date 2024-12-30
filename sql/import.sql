@@ -7,7 +7,7 @@ Title: EU27 & UK gas supply-transmission-consumption structures with driving fac
 Version: 2.0
 Authors: Zhou, C., Zhu, B., Ciais, P., Arous, S. B., Davis, S. J., & Liu, Z.
 Year: 2024
-Source: https://doi.org/10.5281/zenodo.11175364
+DOI: https://doi.org/10.5281/zenodo.11175364
 License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 
 Changes made: 
