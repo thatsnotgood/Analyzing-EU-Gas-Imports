@@ -7,18 +7,12 @@
 ## Analyzing European Union Gas Imports
 
 <div align="center">
-  <a href="[PostgreSQL_url]">
-    <img src="[PostgreSQL]" alt="PostgreSQL">
-  </a>
-  <a href="[Python_url]">
-    <img src="[Python]" alt="Python">
-  </a>
-  <a href="[MITLicense_url]">
-    <img src="[MITLicense]" alt="MIT License">
-  </a>
-  <a href="[CCBY4.0License_url]">
-    <img src="[CCBY4.0License]" alt="CC BY 4.0 License">
-  </a>
+  
+[![PostgreSQL][PostgreSQL]][PostgreSQL_url]
+[![Python][Python]][Python_url]
+[![MIT License][MITLicense]][MITLicense_url]
+[![CC BY 4.0][CCBY4.0License]][CCBY4.0License_url]
+
 </div>
 
 ## Introduction
@@ -27,7 +21,7 @@
 
 ## Database
 
---
+---
 
 **Schema:**
 
