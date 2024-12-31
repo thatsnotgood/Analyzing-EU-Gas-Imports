@@ -101,7 +101,7 @@ This project employs data from the EUGasSC and EUGasNet datasets, which are rele
 - Year: 2024
 - DOI: https://doi.org/10.5281/zenodo.11175364
 
-This project contains transformed data from the EUGasSC and EUGasNet datasets, accessed and processed in December 2024. The original data has been modified through:
+The original datasets were accessed and modified in December 2024. The following changes were made:
 
 - Integration into a PostgreSQL database schema.
 - Implementation of custom indexes and constraints for optimization.

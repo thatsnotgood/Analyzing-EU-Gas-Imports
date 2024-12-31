@@ -1,6 +1,6 @@
-/* Data Attribution:
+/* Dataset Attribution:
 
-This project contains information from the 'EUGasSC' and 'EUGasNet' datasets,
+This project employs data from the 'EUGasSC' and 'EUGasNet' datasets,
 made available under the Creative Commons Attribution 4.0 International License. Details below:
 
 Title: EU27 & UK gas supply-transmission-consumption structures with driving factors of consumption change
