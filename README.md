@@ -123,7 +123,7 @@ Any use of this project must maintain both licenses appropriately: [MIT License]
 [PostgreSQL_url]: https://www.postgresql.org/
 [Python]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=flat
 [Python_url]: https://www.python.org/
-[Psycopg3]: https://img.shields.io/badge/Psycopg3-3.2.3-4169E1.svg
+[Psycopg3]: https://img.shields.io/badge/Psycopg_3-3.2.3-4169E1.svg
 [Psycopg3_url]: https://www.psycopg.org/psycopg3/
 [Pandas]: https://img.shields.io/badge/pandas-150458?logo=pandas&logoColor=fff&style=flat
 [Pandas_url]: https://pandas.pydata.org/
