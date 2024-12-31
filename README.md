@@ -96,7 +96,7 @@ The database schema, SQL queries, Python script, Jupyter Notebooks, and all othe
 
 This project employs data from the EUGasSC and EUGasNet datasets, which are released under the Creative Commons Attribution 4.0 International [(CC BY 4.0) license][CCBY4.0License_url].
 
-For more context about this dataset and its methodology, you can read the authors' original [article][https://essd.copernicus.org/articles/15/949/2023/essd-15-949-2023.html]. 
+For more context about this dataset and its methodology, you can read the authors' original [article](https://essd.copernicus.org/articles/15/949/2023/essd-15-949-2023.html). 
 
 Dataset details:
 
