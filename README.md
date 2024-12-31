@@ -34,7 +34,7 @@
 
 ---
 
-**ENUM Type(s):**
+**ENUM Types:**
 
 ---
 
@@ -68,7 +68,7 @@
 
 **Market Analysis:**
 
-Check out the full analysis in the [Market Analysis Notebook][Market_notebook].
+Check out the full analysis in the [Market Notebook][Market_notebook].
 
 ---
 
@@ -94,7 +94,11 @@ The database schema, SQL queries, Python script, Jupyter Notebooks, and all othe
 
 **Dataset Attribution:**
 
-This project employs data from the EUGasSC and EUGasNet datasets, which are released under the Creative Commons Attribution 4.0 International [(CC BY 4.0) license][CCBY4.0License_url]. Details below:
+This project employs data from the EUGasSC and EUGasNet datasets, which are released under the Creative Commons Attribution 4.0 International [(CC BY 4.0) license][CCBY4.0License_url].
+
+For more context about this dataset and its methodology, you can read the authors' original [article][https://essd.copernicus.org/articles/15/949/2023/essd-15-949-2023.html]. 
+
+Dataset details:
 
 - Title: EU27 & UK gas supply-transmission-consumption structures with driving factors of consumption change
 - Version: 2.0
