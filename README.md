@@ -64,31 +64,12 @@
 
 ### Business Rules
 
-- All gas volumes are measured in kilowatt-hours (kWh)—1 TWh = 1,000,000,000 kWh.
+- All gas volumes are measured in kilowatt-hours (kWh)—1 TWh = 1,000,000,000 kWh. Volumes are daily aggregates, not instantaneous measurements at a given timeframe.
+- Dataset Range: `2016-01-01` to `2024-04-30`.
 - Supply ratios in transmission routes approximately sum to 1.0000 (±0.0005).
 - Storage operations (withdrawal/injection) are tracked separately.
 - Negative values are not permitted in any volume measurements.
-
-### Country Codes & Geographic Coverage
-
-**EU Member States:**
-- AT (Austria), BE (Belgium), BG (Bulgaria), CZ (Czech Republic), DE (Germany), DK (Denmark), EE (Estonia), ES (Spain), FI (Finland), FR (France), GR (Greece), HR (Croatia), HU (Hungary), IE (Ireland), IT (Italy), LT (Lithuania), LV (Latvia), NL (Netherlands), PL (Poland), PT (Portugal), RO (Romania), SI (Slovenia), SK (Slovakia).
-
-**Balanced Market Zones:**
-- BE-LU: Belgium-Luxembourg Balancing Zone[^1].
-- DK-SE: Denmark-Sweden Balancing Zone.
-- LV-EE: Latvia-Estonia Balancing Zone.
-
-**Non-EU Trade Partners:**
-- AZ (Azerbaijan), CH (Switzerland), DZ (Algeria), LY (Libya), NO (Norway), RS (Serbia), RU (Russia), TR (Türkiye).
-
-**Notable Exclusions:**
-- CY (Cyprus): Geographical isolation from European gas network.
-- LU (Luxembourg): Integrated in BE-LU balancing zone.
-- MT (Malta): Limited market size and network connectivity.
-
-The database employs ISO 3166-1 alpha-2 country codes for standard identification, with compounded codes for identifying balanced market zones. 
-All gas volumes and transmission data are tracked at both individual country and balancing zone levels.
+- EUGasSC tracks natural gas consumption by sector: households, public buildings, industry, power generation, and other economic activities.
 
 ### Table Relationships
 
@@ -99,20 +80,39 @@ All gas volumes and transmission data are tracked at both individual country and
 **EUGasNet (Transmission Network):**
 - Primary: Daily transmission route details.
 - Links to: EUGasSC via country pairs.
-- Filtered Materialized View: `documented_routes` (excludes transmissions with uniform supply ratios).
-
-### Updating the Database
-
-- Updated monthly.
-- Last Import: December 2024 (Version 1.0).
-- Date Range: `2016-01-01` to `2024-04-30`.
-- Historical Data: No modifications post-import.
+- Filtered Materialized View: `documented_routes` (excludes transmission rows with uniform supply ratios).
 
 ### Missing Data Handling
-- If gas supply source is unknown: uniform ratios (0.1111) are assigned to `_share` columns in EUGasNet table.
+- When a transmission route's supply sources are unknown, the dataset assigns uniform ratios (1/9 ≈ 0.1111) across all supply origin `_share` columns in EUGasNet. These uniform distributions indicate undocumented supply sources, rather than actual equal contributions from all origins.
 - Zero Values: Treated as actual zeros, not missing data.
 - Storage Data: Null permitted (indicates no storage capacity data found).
 - Consumption Sectors: Nulls handled as 0 in total calculations.
+
+### Country Codes & Geographic Coverage
+
+**EU Member-States:**
+- AT (Austria), BE (Belgium), BG (Bulgaria), CZ (Czech Republic), DE (Germany), DK (Denmark), EE (Estonia), ES (Spain), FI (Finland), FR (France), GR (Greece), HR (Croatia), HU (Hungary), IE (Ireland), IT (Italy), LT (Lithuania), LV (Latvia), NL (Netherlands), PL (Poland), PT (Portugal), RO (Romania), SI (Slovenia), SK (Slovakia).
+
+**Market Balancing Zones:**
+- BE-LU: Belgium-Luxembourg Balancing Zone<sup><a href="#fn1">1</a></sup>.
+- DK-SE: Denmark-Sweden Balancing Zone<sup><a href="#fn2">2</a></sup>.
+- LV-EE: Latvia-Estonia Balancing Zone<sup><a href="#fn3">3</a></sup>.
+
+**Non-EU Trade Partners:**
+- AZ (Azerbaijan), CH (Switzerland), DZ (Algeria), LY (Libya), NO (Norway), RS (Serbia), RU (Russia), TR (Türkiye).
+
+**Notable Exclusions:**
+- CY (Cyprus): Geographical isolation from European gas network.
+- LU (Luxembourg): Integrated in the BE-LU balancing zone.
+- MT (Malta): Limited market size and network connectivity.
+
+The database employs ISO 3166-1 alpha-2 country codes for standard identification, with compounded codes for identifying balanced market zones. 
+All gas volumes and transmission data are tracked at both the individual country and balancing zone levels.
+
+### Updates on the Database
+
+- Last Import: December 2024 (Version 1.0).
+- Audit Log: No modifications post-import.
 
 ## Analysis & Visualizations
 
@@ -170,7 +170,6 @@ Any use of this project must maintain both licenses appropriately: [MIT License]
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
-
 [PostgreSQL]: https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=fff&style=flat
 [PostgreSQL_url]: https://www.postgresql.org/
 [Python]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff&style=flat
@@ -187,3 +186,16 @@ Any use of this project must maintain both licenses appropriately: [MIT License]
 
 [Market_notebook]: https://github.com/thatsnotgood/Analyzing-EU-Gas-Imports/blob/master/notebooks/market_analysis.ipynb
 [Routes_notebook]: https://github.com/thatsnotgood/Analyzing-EU-Gas-Imports/blob/master/notebooks/transmission_route_analysis.ipynb
+
+<!-- MARKDOWN FOOTNOTES -->
+## Footnotes
+
+<div id="fn1">
+1. “A Single Integrated Gas Market for Belgium and Luxembourg.” 2015. Fluxys. https://www.fluxys.com/en/natural-gas-and-biomethane/shipper-journey/fluxys-belgium-and-balansys-roles-and-responsibilities (January 2, 2025).
+</div>
+<div id="fn2">
+2. “Joint Balancing Zone between Sweden and Denmark.” 2019. Energinet. https://en.energinet.dk/gas/shippers/swedegas-joint-balancing-zone/ (January 2, 2025).
+</div>
+<div id="fn3">
+3. “Baltic Regional Gas Market Coordination Group.” 2020. European Union Agency for the Cooperation of Energy Regulators. https://www.acer.europa.eu/gas/network-codes/gas-regional-initiatives/baltic-regional-gas-market-coordination-group (January 2, 2025).
+</div>
