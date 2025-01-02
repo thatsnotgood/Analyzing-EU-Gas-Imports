@@ -62,6 +62,58 @@
 
 ## Data Dictionary
 
+### Business Rules
+
+- All gas volumes are measured in kilowatt-hours (kWh)—1 TWh = 1,000,000,000 kWh.
+- Supply ratios in transmission routes approximately sum to 1.0000 (±0.0005).
+- Storage operations (withdrawal/injection) are tracked separately.
+- Negative values are not permitted in any volume measurements.
+
+### Country Codes & Geographic Coverage
+
+**EU Member States:**
+- AT (Austria), BE (Belgium), BG (Bulgaria), CZ (Czech Republic), DE (Germany), DK (Denmark), EE (Estonia), ES (Spain), FI (Finland), FR (France), GR (Greece), HR (Croatia), HU (Hungary), IE (Ireland), IT (Italy), LT (Lithuania), LV (Latvia), NL (Netherlands), PL (Poland), PT (Portugal), RO (Romania), SI (Slovenia), SK (Slovakia).
+
+**Balanced Market Zones:**
+- BE-LU: Belgium-Luxembourg Balancing Zone[^1].
+- DK-SE: Denmark-Sweden Balancing Zone.
+- LV-EE: Latvia-Estonia Balancing Zone.
+
+**Non-EU Trade Partners:**
+- AZ (Azerbaijan), CH (Switzerland), DZ (Algeria), LY (Libya), NO (Norway), RS (Serbia), RU (Russia), TR (Türkiye).
+
+**Notable Exclusions:**
+- CY (Cyprus): Geographical isolation from European gas network.
+- LU (Luxembourg): Integrated in BE-LU balancing zone.
+- MT (Malta): Limited market size and network connectivity.
+
+The database employs ISO 3166-1 alpha-2 country codes for standard identification, with compounded codes for identifying balanced market zones. 
+All gas volumes and transmission data are tracked at both individual country and balancing zone levels.
+
+### Table Relationships
+
+**EUGasSC (Supply & Consumption):**
+- Primary: Daily country-level gas supply and consumption.
+- Relates to: EUGasNet table via its `import_country_code` column on `country_code`.
+
+**EUGasNet (Transmission Network):**
+- Primary: Daily transmission route details.
+- Links to: EUGasSC via country pairs.
+- Filtered Materialized View: `documented_routes` (excludes transmissions with uniform supply ratios).
+
+### Updating the Database
+
+- Updated monthly.
+- Last Import: December 2024 (Version 1.0).
+- Date Range: `2016-01-01` to `2024-04-30`.
+- Historical Data: No modifications post-import.
+
+### Missing Data Handling
+- If gas supply source is unknown: uniform ratios (0.1111) are assigned to `_share` columns in EUGasNet table.
+- Zero Values: Treated as actual zeros, not missing data.
+- Storage Data: Null permitted (indicates no storage capacity data found).
+- Consumption Sectors: Nulls handled as 0 in total calculations.
+
 ## Analysis & Visualizations
 
 ---
