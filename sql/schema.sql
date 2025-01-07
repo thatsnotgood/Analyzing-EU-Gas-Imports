@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS "EUGasNet" (
     "RS_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Serbia production.
     "TR_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Turkey production.
     "LY_share" DECIMAL(5,4) DEFAULT NULL, -- Supply ratio from Libya production.
-    "TOTAL" NUMERIC(15,4) DEFAULT NULL, -- Total transmission amount (kWh).
+    "TOTAL" NUMERIC(15,4) DEFAULT NULL, -- Total transmission volume (kWh).
     PRIMARY KEY("id")
 );
 
