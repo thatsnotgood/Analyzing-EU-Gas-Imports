@@ -7,7 +7,8 @@ CREATE TYPE "european_gas_zone" AS ENUM (
     'BE-LU', -- Belgium-Luxembourg Balancing Zone.
     'DK-SE', -- Denmark-Sweden Balancing Zone.
     'LV-EE'  -- Latvia-Estonia Balancing Zone.
-    -- Noteworthy Countries omitted: Cyprus (geo-location), Luxembourg and Malta (small market size).
+    -- Noteworthy Countries omitted: 
+    -- Cyprus (geo-location), Luxembourg and Malta (small market size).
 ); 
 
 -- Create finalized EUGasSC table with adjusted column names:
@@ -26,17 +27,17 @@ CREATE TABLE IF NOT EXISTS "EUGasSC" (
     "RS" INT DEFAULT NULL, -- Gas supply from Serbia imports.
     "LY" INT DEFAULT NULL, -- Gas supply from Libya imports.
     "TR" INT DEFAULT NULL, -- Gas supply from Turkey imports.
-    "storage_withdrawal" BIGINT DEFAULT NULL, -- Gas supply withdrawn from storage.
-    "storage_injection" BIGINT DEFAULT NULL, -- Gas supply injected into storage.
-    "RU_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored Russia imports.
-    "LNG_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored LNG imports.
-    "PRO_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored European Union production.
-    "AZ_from_storage" INT DEFAULT NULL, -- Gas supply from stored Azerbaijan imports.
-    "DZ_from_storage" INT DEFAULT NULL, -- Gas supply from stored Algeria imports.
-    "NO_from_storage" BIGINT DEFAULT NULL, -- Gas supply from stored Norway imports.
-    "RS_from_storage" INT DEFAULT NULL, -- Gas supply from stored Serbia imports.
-    "LY_from_storage" INT DEFAULT NULL, -- Gas supply from stored Libya imports.
-    "TR_from_storage" INT DEFAULT NULL, -- Gas supply from stored Turkey imports.
+    "storage_withdrawal" BIGINT DEFAULT NULL, -- Supply withdrawn from storage.
+    "storage_injection" BIGINT DEFAULT NULL, -- Supply injected into storage.
+    "RU_from_storage" BIGINT DEFAULT NULL, -- Supply from stored Russia imports.
+    "LNG_from_storage" BIGINT DEFAULT NULL, -- Supply from stored LNG imports.
+    "PRO_from_storage" BIGINT DEFAULT NULL, -- Supply from stored European Union production.
+    "AZ_from_storage" INT DEFAULT NULL, -- Supply from stored Azerbaijan imports.
+    "DZ_from_storage" INT DEFAULT NULL, -- Supply from stored Algeria imports.
+    "NO_from_storage" BIGINT DEFAULT NULL, -- Supply from stored Norway imports.
+    "RS_from_storage" INT DEFAULT NULL, -- Supply from stored Serbia imports.
+    "LY_from_storage" INT DEFAULT NULL, -- Supply from stored Libya imports.
+    "TR_from_storage" INT DEFAULT NULL, -- Supply from stored Turkey imports.
     "house_heating" BIGINT DEFAULT NULL, -- Gas consumption in household heating.
     "public_heating" INT DEFAULT NULL, -- Gas consumption in public building heating.
     "others" INT DEFAULT NULL, -- Gas consumption in other sector(s).
@@ -62,8 +63,8 @@ SELECT
     "country" AS "country_code", -- Rename to clarify: the values denote country codes.
     "TOTAL", 
     "RU", "LNG", "PRO", "AZ", "DZ", "NO", "RS", "LY", "TR",
-    "storageSupply" AS "storage_withdrawal", -- Rename to clarify: gas withdrawn from storage.
-    "toStorage" AS "storage_injection", -- Rename to clarify: gas injected into storage.
+    "storageSupply" AS "storage_withdrawal", -- Gas withdrawn from storage.
+    "toStorage" AS "storage_injection", -- Gas injected into storage.
     "RU_from_storage", "LNG_from_storage", "PRO_from_storage",
     "AZ_from_storage", "DZ_from_storage", "NO_from_storage",
     "RS_from_storage", "LY_from_storage", "TR_from_storage",
@@ -86,7 +87,9 @@ CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
 
 -- Create finalized EUGasNet table with adjusted column names:
 -- Note: TOTAL represents gas transmission volume measured in kilowatt-hours (kWh).
--- Note: Share columns ('_share') represent source composition ratios of transmitted gas (i.e., proportion from each source like LNG, Russia, Norway etc.), where all shares sum to approximately 1.0000 for each transmission.
+-- Note: Share columns ('_share') represent source ratios of transmitted gas 
+-- (i.e., proportion from each source like LNG, Russia, Norway etc.), 
+-- where all shares sum to approximately 1.0000 for each transmission.
 CREATE TABLE IF NOT EXISTS "EUGasNet" (
     "id" SERIAL,
     "date" DATE NOT NULL,
@@ -116,12 +119,12 @@ INSERT INTO "EUGasNet" (
 )
 SELECT
     "date",
-    "fromCountry" AS "export_country_code", -- Rename to clarify: Export country's code.
-    "toCountry" AS "import_country_code", -- Rename to clarify: Import country's code.
+    "fromCountry" AS "export_country_code", -- Export country's code.
+    "toCountry" AS "import_country_code", -- Import country's code.
     "LNG_share", "PRO_share", "RU_share",
     "AZ_share", "DZ_share", "NO_share",
     "RS_share", "TR_share", "LY_share",
-    "TotalFlow" AS "TOTAL" -- Rename to clarify: Following consistent naming convention for totals. Total gas transmission.
+    "TotalFlow" AS "TOTAL" -- Following consistent naming convention. Total gas transmission.
 FROM "EUGasNet_staging";
 
 -- Create check constraints via alter table statements for data integrity:
@@ -185,7 +188,12 @@ ADD CONSTRAINT "check_sc_consumption_total_balance" CHECK (
      COALESCE("others", 0) +
      COALESCE("industrial", 0) +
      COALESCE("power", 0))::NUMERIC
-    BETWEEN COALESCE("TOTAL", 0)::NUMERIC * 0.95 AND COALESCE("TOTAL", 0)::NUMERIC * 1.05
+    BETWEEN COALESCE(
+        "TOTAL", 0
+    )::NUMERIC * 0.95 
+    AND COALESCE(
+        "TOTAL", 0
+    )::NUMERIC * 1.05
 );
 
 -- Add unique constraint to disallow duplicate supply/consumption records:
@@ -207,7 +215,7 @@ ADD CONSTRAINT "check_net_valid_date" CHECK (
     "date" >= '2016-01-01'
 );
 
--- Add check constraint to verify sum of '_share' columns approximately equals 1.0000 (±0.0005):
+-- Add check constraint to verify sum of '_share' columns approximates 1.0000 (±0.0005):
 ALTER TABLE "EUGasNet"
 ADD CONSTRAINT "check_net_shares_sum" CHECK (
     (COALESCE("LNG_share", 0) +
@@ -243,19 +251,28 @@ CREATE INDEX "ix_net_ru_share" ON "EUGasNet" ("RU_share");
 
 -- (2) Composite EUGasNet index:
 CREATE INDEX "ix_net_date_ru_share" ON "EUGasNet" ("date", "RU_share");
-CREATE INDEX "ix_net_ru_composite" ON "EUGasNet" ("export_country_code", "import_country_code", "RU_share", "date");
+CREATE INDEX "ix_net_ru_composite" 
+    ON "EUGasNet" (
+        "export_country_code", "import_country_code", "RU_share", "date"
+    );
 
 -- Create materialized view for isolating documented gas transmission routes:
 /* Purpose:
-(1) Excludes routes wherein all recorded transmissions have an RU_share supply ratio = 0.1111 (1/9).
-(2) This view improves query performance by pre-computing routes with distinct supply-shares.
+(1) Excludes routes wherein all recorded transmissions have an RU_share supply 
+    ratio = 0.1111 (1/9).
+(2) This view improves query performance by pre-computing routes with distinct 
+    supply-shares.
 
 Rationale:
 A route represents a unique export-import country pair (e.g., DK-SE to DE).
-Each route contains multiple transmission records (rows), with each record documenting a gas flow event.
-When the supply-source is unknown, the dataset assigns equal shares (1/9) to all '_share' columns.
-These routes show uniform distributions (1/9 share across all supply origins), indicating the true production supply ratio is unknown.
-The view excludes these routes to focus on transmission patterns with distinct, documented supply-shares.
+Each route contains multiple transmission records (rows), with each record
+documenting a gas flow event.
+When the supply-source is unknown, the dataset assigns equal shares (1/9) to
+all '_share' columns.
+These routes show uniform distributions (1/9 share across all supply origins),
+indicating the true production supply ratio is unknown.
+The view excludes these routes to focus on transmission patterns with distinct,
+documented supply-shares.
 */
 CREATE MATERIALIZED VIEW "documented_routes" AS
 SELECT *
