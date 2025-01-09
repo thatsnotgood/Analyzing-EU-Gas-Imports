@@ -4,7 +4,9 @@
 
 <a name="readme-top"></a>
 
-## Analyzing European Union Gas Imports
+## Analyzing European Union Gas Imports (2016-2024)
+
+A data-driven analysis of EU gas trade patterns, supply routes, and strategic pivots in response to geopolitical events in the region.
 
 <div align="center">
 
@@ -23,6 +25,15 @@
 </div>
 
 ## Project Overview
+
+This project analyzes EU gas import, supply, and consumption data from 2016 to 2024, focusing on transmission routes, supply sources, and trade partnerships. Employing PostgreSQL and Python, we investigate how the European Union and neighboring countries pivoted their gas trade strategies, particularly in response to the Russian invasion of Ukraine on February 24, 2022. Using data from the `EUGasSC` and `EUGasNet` datasets<sup><a href="#fn1">1</a></sup>, the analysis covers market elasticity, Europe's Russian gas dependency, and changes in trade relationships before and after the war's commencement, providing insights into Europe's nascent energy landscape.
+
+**Key features:**
+- A custom and optimized PostgreSQL database.
+- Python-based database connection adaptor and visualization.
+- Statistical analysis of pre- and post-`2022-02-24` gas import patterns.
+- Exploration of market restructuring and supplier diversification efforts.
+- Time series analysis of supply route changes.
 
 ## Data Source
 
@@ -77,16 +88,15 @@
 - Primary: Daily country-level gas supply and consumption.
 - Relates to: EUGasNet table via its `import_country_code` column on `country_code`.
 
-**EUGasNet (Transmission Network):**
+**EUGasNet (Transmission & Trade Network):**
 - Primary: Daily transmission route details.
 - Links to: EUGasSC via country pairs.
 - Filtered Materialized View: `documented_routes` (excludes transmission rows with uniform supply ratios).
 
 ### Missing Data Handling
-- When a transmission route's supply sources are unknown, the dataset assigns uniform ratios (1/9 ≈ 0.1111) across all supply origin `_share` columns in EUGasNet. These uniform distributions indicate undocumented supply sources, rather than actual equal contributions from all origins.
+- When a transmission route's supply sources are unknown, the dataset assigns uniform ratios (1/9 ≈ 0.1111) across all supply origin `_share` columns in the `EUGasNet` table. In reality, we expect variance in supply ratios, not equal distribution from all nine supplier countries. This necessitates a filtered view for accurate analysis of EU gas trade strategic pivots after the invasion of Ukraine, though it results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
 - Zero Values: Treated as actual zeros, not missing data.
 - Storage Data: Null permitted (indicates no storage capacity data found).
-- Consumption Sectors: Nulls handled as 0 in total calculations.
 
 ### Country Codes & Geographic Coverage
 
@@ -94,9 +104,9 @@
 - AT (Austria), BE (Belgium), BG (Bulgaria), CZ (Czech Republic), DE (Germany), DK (Denmark), EE (Estonia), ES (Spain), FI (Finland), FR (France), GR (Greece), HR (Croatia), HU (Hungary), IE (Ireland), IT (Italy), LT (Lithuania), LV (Latvia), NL (Netherlands), PL (Poland), PT (Portugal), RO (Romania), SI (Slovenia), SK (Slovakia).
 
 **Market Balancing Zones:**
-- BE-LU: Belgium-Luxembourg Balancing Zone<sup><a href="#fn1">1</a></sup>.
-- DK-SE: Denmark-Sweden Balancing Zone<sup><a href="#fn2">2</a></sup>.
-- LV-EE: Latvia-Estonia Balancing Zone<sup><a href="#fn3">3</a></sup>.
+- BE-LU: Belgium-Luxembourg Balancing Zone<sup><a href="#fn2">2</a></sup>.
+- DK-SE: Denmark-Sweden Balancing Zone<sup><a href="#fn3">3</a></sup>.
+- LV-EE: Latvia-Estonia Balancing Zone<sup><a href="#fn4">4</a></sup>.
 
 **Non-EU Trade Partners:**
 - AZ (Azerbaijan), CH (Switzerland), DZ (Algeria), LY (Libya), NO (Norway), RS (Serbia), RU (Russia), TR (Türkiye).
@@ -191,11 +201,14 @@ Any use of this project must maintain both licenses appropriately: [MIT License]
 ## Footnotes
 
 <div id="fn1">
-1. “A Single Integrated Gas Market for Belgium and Luxembourg.” 2015. Fluxys. https://www.fluxys.com/en/natural-gas-and-biomethane/shipper-journey/fluxys-belgium-and-balansys-roles-and-responsibilities (January 2, 2025).
+<sup>1</sup>Zhou, Chuanlong, Biqing Zhu, Philippe Ciais, Simon Ben Arous, Steven J. Davis, and Zhu Liu. 2024. “EU27&UK Gas Supply-Transmission-Consumption Structures with Driving Factors of Consumption Change.” doi:10.5281/zenodo.11175364.
 </div>
 <div id="fn2">
-2. “Joint Balancing Zone between Sweden and Denmark.” 2019. Energinet. https://en.energinet.dk/gas/shippers/swedegas-joint-balancing-zone/ (January 2, 2025).
+<sup>2</sup>“A Single Integrated Gas Market for Belgium and Luxembourg.” 2015. Fluxys. https://www.fluxys.com/en/natural-gas-and-biomethane/shipper-journey/fluxys-belgium-and-balansys-roles-and-responsibilities (January 2, 2025).
 </div>
 <div id="fn3">
-3. “Baltic Regional Gas Market Coordination Group.” 2020. European Union Agency for the Cooperation of Energy Regulators. https://www.acer.europa.eu/gas/network-codes/gas-regional-initiatives/baltic-regional-gas-market-coordination-group (January 2, 2025).
+<sup>3</sup>“Joint Balancing Zone between Sweden and Denmark.” 2019. Energinet. https://en.energinet.dk/gas/shippers/swedegas-joint-balancing-zone/ (January 2, 2025).
+</div>
+<div id="fn4">
+<sup>4</sup>“Baltic Regional Gas Market Coordination Group.” 2020. European Union Agency for the Cooperation of Energy Regulators. https://www.acer.europa.eu/gas/network-codes/gas-regional-initiatives/baltic-regional-gas-market-coordination-group (January 2, 2025).
 </div>
