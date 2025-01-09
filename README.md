@@ -6,7 +6,7 @@
 
 ## Analyzing European Union Gas Imports (2016-2024)
 
-A data-driven analysis of EU gas trade patterns, supply routes, and strategic pivots in response to geopolitical events in the region.
+A data-driven analysis of EU gas trade patterns, supply sources, and strategic pivots following the 2022 Russian invasion of Ukraine.
 
 <div align="center">
 
@@ -26,14 +26,13 @@ A data-driven analysis of EU gas trade patterns, supply routes, and strategic pi
 
 ## Project Overview
 
-This project analyzes EU gas import, supply, and consumption data from 2016 to 2024, focusing on transmission routes, supply sources, and trade partnerships. Employing PostgreSQL and Python, we investigate how the European Union and neighboring countries pivoted their gas trade strategies, particularly in response to the Russian invasion of Ukraine on February 24, 2022. Using data from the `EUGasSC` and `EUGasNet` datasets<sup><a href="#fn1">1</a></sup>, the analysis covers market elasticity, Europe's Russian gas dependency, and changes in trade relationships before and after the war's commencement, providing insights into Europe's nascent energy landscape.
+This project analyzes Europe's gas import, supply, and consumption data from 2016 to 2024, focusing on transmission routes, supply sources, and trade partnerships. Employing PostgreSQL and Python, the analysis investigates how the European Union and neighboring countries pivoted their gas trade strategies, particularly in response to the Russian invasion of Ukraine on February 24, 2022. Using data from the `EUGasSC` and `EUGasNet` datasets<sup><a href="#fn1">1</a></sup>, the analysis covers market elasticity, Europe's Russian gas dependency, and changes in trade partnerships before and after the war's commencement, providing insights into Europe's evolving gas market paradigm.
 
 **Key features:**
 - A custom and optimized PostgreSQL database.
 - Python-based database connection adaptor and visualization.
-- Statistical analysis of pre- and post-`2022-02-24` gas import patterns.
-- Exploration of market restructuring and supplier diversification efforts.
-- Time series analysis of supply route changes.
+- Statistical analysis of market restructuring and supplier diversification efforts.
+- Time series analysis comparing gas trade patternships pre- and post-Russian invasion of Ukraine (`2022-02-24`).
 
 ## Data Source
 
@@ -86,15 +85,15 @@ This project analyzes EU gas import, supply, and consumption data from 2016 to 2
 
 **EUGasSC (Supply & Consumption):**
 - Primary: Daily country-level gas supply and consumption.
-- Relates to: EUGasNet table via its `import_country_code` column on `country_code`.
+- Relates to: `EUGasNet` table via its `import_country_code` column on `country_code`.
 
 **EUGasNet (Transmission & Trade Network):**
-- Primary: Daily transmission route details.
-- Links to: EUGasSC via country pairs.
+- Primary: Daily transmission route details and gas supply ratio distribution.
 - Filtered Materialized View: `documented_routes` (excludes transmission rows with uniform supply ratios).
+- Relates to: `EUGasSC` table via its `country_code` column on `import_country_code`.
 
 ### Missing Data Handling
-- When a transmission route's supply sources are unknown, the dataset assigns uniform ratios (1/9 ≈ 0.1111) across all supply origin `_share` columns in the `EUGasNet` table. In reality, we expect variance in supply ratios, not equal distribution from all nine supplier countries. This necessitates a filtered view for accurate analysis of EU gas trade strategic pivots after the invasion of Ukraine, though it results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
+- When a transmission route's supply sources are unknown, the dataset assigns uniform ratios (1/9 ≈ '0.1111') across all supply origin `_share` columns in the `EUGasNet` table. In reality, we expect variance in supply ratios, not equal distribution from all nine supplier countries. This necessitates a filtered view for accurate analysis of EU gas trade strategic pivots after the invasion of Ukraine, though it results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
 - Zero Values: Treated as actual zeros, not missing data.
 - Storage Data: Null permitted (indicates no storage capacity data found).
 
@@ -164,7 +163,7 @@ Dataset details:
 
 - Title: EU27 & UK gas supply-transmission-consumption structures with driving factors of consumption change
 - Version: 2.0
-- Authors: Zhou, C., Zhu, B., Ciais, P., Arous, S. B., Davis, S. J., & Liu, Z.
+- Authors: Chuanlong Zhou, Biqing Zhu, Philippe Ciais, Simon Ben Arous, Steven J. Davis, and Zhu Liu.
 - Year: 2024
 - DOI: https://doi.org/10.5281/zenodo.11175364
 
@@ -172,10 +171,12 @@ The original datasets were accessed and modified in December 2024. The following
 
 - Integration into a PostgreSQL database schema.
 - Implementation of custom indexes and constraints for optimization.
-- Creation of analytical views.
+- Creation of analytical views, including the `documented_routes` view for filtering out transmissions consisting of uniform supply ratios.
 - Development of market and transmission route queries.
+- Data wrangling with Postgres and Python.
+- Creation of Jupyter Notebooks for interactive analysis and result presentation.
 
-Any use of this project must maintain both licenses appropriately: [MIT License][MITLicense_url] for code and the [CC BY 4.0 license][CCBY4.0License_url] for the original dataset. Attribution for the original dataset must be clearly visible and accessible.
+Any use of this project must maintain both licenses appropriately: [MIT License][MITLicense_url] for the code and the [CC BY 4.0 license][CCBY4.0License_url] for the original dataset. Attribution for the original dataset must be clearly visible and accessible.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
