@@ -29,7 +29,7 @@ def db():
         print(f"Unable to connect to the database: {e}")
         raise
     except ProgrammingError as e:
-        print(f"An error occurred with the execution of the query: {e}")
+        print(f"An error occurred with the execution of the SQL query: {e}")
         raise
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
