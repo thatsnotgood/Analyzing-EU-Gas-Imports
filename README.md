@@ -100,9 +100,9 @@ When the country of origin for a gas flow is unknown, the dataset employs a plac
 
 It's important to note that this uniform distribution does not reflect real-world supply patterns. In reality, we expect to observe variance in supply ratios across countries and over time.
 
-To ensure accurate analysis of EU gas trade strategic pivots following the invasion of Ukraine, our analytical view excludes routes with uniform transmissions. This prevents skewing of statistical results by focusing on transmission patterns with distinct, documented supply-shares. However, this approach results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
+To ensure accurate analysis of EU gas trade pivots following the invasion of Ukraine, the materialized view (denoted as `documented_routes`) excludes routes with uniform transmissions. This prevents skewing of statistical results by focusing on transmission patterns with distinct, documented supply-shares. However, this approach results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
 
-This filtering is necessary because placeholder values (0.1111) cannot be meaningfully distinguished from actual documented supply-shares in statistical analyses.statistical analyses.
+This filtering is necessary because placeholder values (0.1111) cannot be meaningfully distinguished from actual documented supply-shares in the statistical analysis code.
 
 ### Missing Data Handling
 
