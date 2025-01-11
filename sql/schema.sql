@@ -258,23 +258,31 @@ CREATE INDEX "ix_net_ru_composite"
 
 -- Create materialized view for isolating documented gas transmission routes:
 /* Purpose:
-(1) Excludes routes wherein all recorded transmissions have an RU_share supply 
+(1) Excludes routes wherein all recorded transmissions have an RU_share supply
     ratio = '0.1111' (1/9).
-(2) This view improves query performance by pre-computing routes with distinct 
+(2) This view improves query performance by pre-computing routes with distinct
     supply-shares.
 
 Rationale:
-A route represents a unique export-import country pair (e.g., DK-SE to DE).
-Each route contains multiple transmission trades (rows), with each trade
-documenting a gas flow event.
-When the gas supply's source country is unknown, the dataset assigns equal shares 
-(1/9 or '0.1111') to all '_share' columns throughout the transmission's row.
-Certain routes show uniform distributions (1/9 share across all supplier countries),
-indicating the true supply ratio of the gas is unknown.
-This uniform distribution is not a real world phenomenon, as we would expect to
-a varience in supply ratios across countries over time.
-The view excludes these route pairs to focus on transmission patterns with distinct,
-documented supply-shares.
+A route represents a unique export-import country pair (e.g., CZ to DE).
+The data follows a calendar-like structure, where each route's transmissions are
+documented on a day-by-day basis.
+Thus, each route contains multiple transmissions (rows), with each row documenting
+a gas flow trade on a given day.
+
+When the country of origin for the gas flow supply is unknown, the dataset uses
+a placeholder distribution, assigning equal shares (1/9 ratio, since there are
+nine supplier countries in the dataset) to all '_share' columns for a given
+transmission. 
+
+This uniform distribution is not reflective of supply patterns observed in the
+real world, as we would expect to see a variance in supply ratios across countries
+and transmissions over time.
+
+The proposed analytical view excludes routes with uniform transmissions to prevent
+skewing of statistical results, focusing instead on transmission patterns with
+distinct, documented supply-shares, as placeholder values (0.1111) cannot be
+meaningfully distinguished from actual documented supply-shares.
 */
 CREATE MATERIALIZED VIEW "documented_routes" AS
 SELECT *

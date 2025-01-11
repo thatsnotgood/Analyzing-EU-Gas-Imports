@@ -92,8 +92,20 @@ This project analyzes Europe's gas import, supply, and consumption data from 201
 - Filtered Materialized View: `documented_routes` (excludes transmission rows with uniform supply ratios).
 - Relates to: `EUGasSC` table via its `country_code` column on `import_country_code`.
 
+### Materialized View: Affordances and Limitations
+
+A route in the dataset represents a unique export-import country pair (e.g., CZ to DE). The data follows a calendar-like structure, with each route's transmissions documented daily. Each route contains multiple transmissions (rows), where each row represents a gas flow trade on a specific day.
+
+When the country of origin for a gas flow is unknown, the dataset employs a placeholder distribution. This assigns equal shares (1/9 ratio, as there are nine supplier countries in the dataset) to all '_share' columns for that transmission in the `EUGasNet` table.
+
+It's important to note that this uniform distribution does not reflect real-world supply patterns. In reality, we expect to observe variance in supply ratios across countries and over time.
+
+To ensure accurate analysis of EU gas trade strategic pivots following the invasion of Ukraine, our analytical view excludes routes with uniform transmissions. This prevents skewing of statistical results by focusing on transmission patterns with distinct, documented supply-shares. However, this approach results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
+
+This filtering is necessary because placeholder values (0.1111) cannot be meaningfully distinguished from actual documented supply-shares in statistical analyses.statistical analyses.
+
 ### Missing Data Handling
-- When a transmission route's supply sources are unknown, the dataset assigns uniform ratios (1/9 ≈ '0.1111') across all supply origin `_share` columns in the `EUGasNet` table. In reality, we expect variance in supply ratios, not equal distribution from all nine supplier countries. This necessitates a filtered view for accurate analysis of EU gas trade strategic pivots after the invasion of Ukraine, though it results in the loss of some routes (e.g., RU -> DE or DZ -> IT) where source data is not publicly available.
+
 - Zero Values: Treated as actual zeros, not missing data.
 - Storage Data: Null permitted (indicates no storage capacity data found).
 
