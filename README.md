@@ -34,42 +34,7 @@ This project analyzes Europe's gas import, supply, and consumption data from 201
 - Statistical analysis of market restructuring and supplier diversification efforts.
 - Time series analysis comparing gas trade patternships pre- and post-Russian invasion of Ukraine (`2022-02-24`).
 
-## Data Source
-
-## Database
-
-This project uses a PostgreSQL database to store and manage the European gas import and transmission data.
-
-### Database Design
-
-- **Tables**: Two main tables, `EUGasSC` (Supply & Consumption) and `EUGasNet` (Transmission & Trade Network), form the core of the database.
-- **Materialized View**: A `documented_routes` view is created to filter out transmission routes with uniform supply ratios, giving credence to the analysis' accuracy.
-
-### Key Features & Performance Optimization
-
-- **Custom ENUM Types**: Utilizes PostgreSQL ENUM types for efficient storage and validation of country codes and market stakeholders.
-- **Constraints**: Implements various CHECK constraints to ensure data integrity and enforce business rules.
-- **Indexing**: Strategic indexes are created to optimize query performance, particularly for date-based and country-code-based queries.
-
-### Database Schema
-
-For detailed information about table structures, relationships, and data definitions, please refer to the [Data Dictionary](#data-dictionary) section below.
-
-### Sample Queries
-
-The [sql/queries.sql](https://github.com/thatsnotgood/Analyzing-EU-Gas-Imports/blob/master/sql/queries.sql) file contains a set of sample queries demonstrating various analyses that can be performed on this dataset, including:
-
-- Market structure analysis using the Herfindahl-Hirschman Index (HHI) to measure market concentration and elasticity.
-- Comparative analysis of countries' dependency on Russian gas before and after the 2022 invasion of Ukraine.
-- Statistical analysis of changes in gas supply composition, including mean, standard deviation, and inter-quartile ranges of Russian gas share.
-- Identification of significant shifts in trading partnerships, including new supplier relationships and export market changes.
-- Time-series analysis of transmission routes, focusing on changes in gas supply-origin composition.
-
-For more in-depth analysis, please refer to the Jupyter notebooks in the `notebooks/` directory.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Data Dictionary
+## Database Dictionary
 
 ### Business Rules
 
@@ -152,12 +117,6 @@ Check out the full analysis in the [Transmission Routes Notebook][Routes_noteboo
 
 ---
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-## Installation & Setup
-
-## Project Structure
-
 ## License
 
 **This project is under dual licensing:**
@@ -168,13 +127,13 @@ The database schema, SQL queries, Python script, Jupyter Notebooks, and all othe
 
 **Dataset Attribution:**
 
-This project employs data from the EUGasSC and EUGasNet datasets, which are released under the Creative Commons Attribution 4.0 International [(CC BY 4.0) license][CCBY4.0License_url].
+This project employs data from the `EUGasSC` and `EUGasNet` datasets, which are released under the Creative Commons Attribution 4.0 International [(CC BY 4.0) license][CCBY4.0License_url].
 
 For more context about this dataset and its methodology, you can read the authors' original [article](https://essd.copernicus.org/articles/15/949/2023/essd-15-949-2023.html). 
 
 Dataset details:
 
-- Title: EU27 & UK gas supply-transmission-consumption structures with driving factors of consumption change
+- Title: EU27&UK Gas Supply-Transmission-Consumption Structures with Driving Factors of Consumption Change.
 - Version: 2.0
 - Authors: Chuanlong Zhou, Biqing Zhu, Philippe Ciais, Simon Ben Arous, Steven J. Davis, and Zhu Liu.
 - Year: 2024
