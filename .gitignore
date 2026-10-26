@@ -1,6 +1,15 @@
 # Environment Variables:
 .env
 
+# Raw data in CSV format:
+data/
+
 # Python bytecode files and cache:
 __pycache__/
 *.pyc
+
+# Jupyter Notebook checkpoints:
+.ipynb_checkpoints/
+
+# Python virtual environments:
+.venv/

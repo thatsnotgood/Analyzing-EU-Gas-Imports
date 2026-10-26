@@ -73,9 +73,7 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasSC_staging" (
 );
 
 -- Import EUGasSC.csv file contents into database via staging table:
-\copy "EUGasSC_staging" FROM '../../../EUGasSC.csv' WITH (
-    FORMAT csv, HEADER true
-);
+\copy "EUGasSC_staging" FROM 'data/EUGasSC.csv' WITH (FORMAT csv, HEADER true)
 
 -- Create type for EU Gas-Market Participants:
 CREATE TYPE "eu_gas_market_stakeholder" AS ENUM (
@@ -113,6 +111,4 @@ CREATE TEMPORARY TABLE IF NOT EXISTS "EUGasNet_staging" (
 );
 
 -- Import EUGasNet.csv file contents into database via staging table:
-\copy "EUGasNet_staging" FROM '../../../EUGasNet.csv' WITH (
-    FORMAT csv, HEADER true
-);
+\copy "EUGasNet_staging" FROM 'data/EUGasNet.csv' WITH (FORMAT csv, HEADER true)
